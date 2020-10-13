@@ -34,7 +34,7 @@ export const useFetch = (url) => {
                             console.log ("set state no se llamo");
                         }
                         
-                    }, 4000);
+                    }, 100);
                 } )
         }, url);
 
