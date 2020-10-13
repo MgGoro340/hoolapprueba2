@@ -1,7 +1,7 @@
 stages:
     - build
     - test
-  build:
+build:
     stage: build
     script:
       - 'echo "hello, world!"'
@@ -10,7 +10,7 @@ stages:
       - npm build
       - echo "Build successfully!"
     image: node
-  test:
+test:
     stage: test
     script:
       - 'echo "hello, world!"'
@@ -20,4 +20,3 @@ stages:
       - npm test
       - echo "Test successfully!"
     image: node
-  
