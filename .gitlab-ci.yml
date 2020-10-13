@@ -17,6 +17,6 @@ test:
       - 'echo "Testing App"'
       - npm install
       - CI=true
-      - npm test
+      - npm test --passWithNoTests
       - 'echo "Test successfully!"'
     image: node
