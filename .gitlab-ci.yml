@@ -1,21 +1,23 @@
 stages:
     - build
     - test
-  
   build:
     stage: build
-    image: node
-    script: 
-      - echo "Start building App"
+    script:
+      - 'echo "hello, world!"'
+      - '  echo "Start building App"'
       - npm install
       - npm build
       - echo "Build successfully!"
-  
+    image: node
   test:
     stage: test
-    image: node
     script:
-      - echo "Testing App"
+      - 'echo "hello, world!"'
+      - wecho "Testing App"
       - npm install
-      - CI=true npm test
-      - echo "Test successfully!" 
+      - CI=true
+      - npm test
+      - echo "Test successfully!"
+    image: node
+  
