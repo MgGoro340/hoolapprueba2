@@ -5,7 +5,7 @@ build:
     stage: build
     script:
       - 'echo "hello, world!"'
-      - 'echo "Start building App"'
+      - 'echo "Start building vvApp"'
       - npm install
       - npm build
       - docker stop gitlabbadquotes
