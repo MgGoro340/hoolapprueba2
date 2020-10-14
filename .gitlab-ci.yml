@@ -4,7 +4,7 @@ stages:
 build:
     stage: build
     script:
-      - 'echo "hello, wossrld!"'
+      - 'echo "hello, woddddddssrld!"'
       - 'echo "Start building vvApp"'
       - npm install
       - npm build
