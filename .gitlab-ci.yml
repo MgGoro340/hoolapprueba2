@@ -18,4 +18,4 @@ test:
       - npm install
       - CI=true
       - 'echo "Test successfully!"'
-    image: node
+    image: node 
