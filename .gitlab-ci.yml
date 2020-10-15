@@ -4,14 +4,10 @@ stages:
 build:
     stage: build
     script:
-      - 'echo "hello, fdffdddgeerwerererwrergsrld!"'
+      - 'echo "hello, llamando a docker!"'
       - 'echo "Start building vvApp"'
       - npm install
       - npm build
-      - sudo docker stop gitlabbadquotes
-      - sudo  docker rmi gitlabbadquotes
-      - sudo docker build --tag gitlabbadquotes:1.0 .
-      - sudo  docker run -p 4350:80 -d --name gitlabbadquotescontainer gitlabbadquotes:1.0
       - echo "Build successfully!"
     image: node
 test:
@@ -19,7 +15,9 @@ test:
     script:
       - 'echo "hello, world!"'
       - 'echo "Testing App"'
-      - npm install
-      - CI=true
+      - docker stop gitlabbadquotes
+      - docker rmi gitlabbadquotes
+      - docker build --tag gitlabbadquotes:1.0 .
+      - docker run -p 4350:80 -d --name gitlabbadquotescontainer gitlabbadquotes:1.0
       - 'echo "Test successfully!"'
-    image: node 
+  
