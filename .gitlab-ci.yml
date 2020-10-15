@@ -2,6 +2,9 @@ stages:
     - build
 build:
     stage: build
+    cache:
+      paths:
+        - node_modules/
     script:
       - 'echo "hello, llamando a docker!"'
       - 'echo "Start building vvApp"'
