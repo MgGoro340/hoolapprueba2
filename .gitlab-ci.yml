@@ -10,5 +10,8 @@ build:
       - 'echo "Start building vvApp"'
       - npm install
       - npm build
+      - docker build . -t gitlabbadquest:latest
       - echo "Build successfully!"
     image: node
+    services:
+      - docker:dind  
