@@ -9,14 +9,3 @@ build:
       - npm build
       - echo "Build successfully!"
     image: node
-test:
-    stage: test
-    script:
-      - 'echo "hello, world!"'
-      - 'echo "Testing App"'
-      - docker stop gitlabbadquotes
-      - docker rmi gitlabbadquotes
-      - docker build --tag gitlabbadquotes:1.0 .
-      - docker run -p 4350:80 -d --name gitlabbadquotescontainer gitlabbadquotes:1.0
-      - 'echo "Test successfully!"'
-  
