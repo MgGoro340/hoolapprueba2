@@ -1,7 +1,7 @@
 stages:
-    - build
+    - deploy
 build:
-    stage: build
+    stage: deploy
     cache:
       paths:
         - node_modules/
