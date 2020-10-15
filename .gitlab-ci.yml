@@ -6,7 +6,7 @@ build:
       paths:
         - node_modules/
     script:
-      - 'echo "hello, llamando a docker!"'
+      - 'echo "hello, llamando affff docker!"'
       - 'echo "Start building vvApp"'
       - npm install
       - npm build
