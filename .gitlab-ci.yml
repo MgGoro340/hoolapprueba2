@@ -19,9 +19,9 @@ build:
       - 'echo "hello, llamando affff docker!"'
       - 'echo "Start building vvApp"'
       - npm install
-    image: gitlabbadquotes
+    image: node
 deploy:
-  image: gitlabbadquotes
+  image: node
   stage: deploy
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
@@ -36,4 +36,3 @@ deploy:
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - sbt docker:publish
-  
