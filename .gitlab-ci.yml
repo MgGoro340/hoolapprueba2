@@ -43,6 +43,8 @@ deploy:
   before_script:
     - echo "deploying app"
   script:
-    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY root@$PROD_SERVER_IP "docker pull registry.gitlab.com/mggoro/pruebaspipeline"
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > /src/pem/key.pem
+    - chmod 400 key.pem
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY marting@$PROD_SERVER_IP "docker pull registry.gitlab.com/mggoro/pruebaspipeline"
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY root@$PROD_SERVER_IP "docker stop pruebaspipeline || true && docker rm pruebaspipeline || true"
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY root@$PROD_SERVER_IP "docker run -p 3001:80 -d --name pruebaspipeline docker registry.gitlab.com/mggoro/pruebaspipeline"
