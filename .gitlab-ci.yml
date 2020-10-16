@@ -1,7 +1,4 @@
 stages:
-  - build
-  - test
-  - docker-build
   - deploy
 
 build:
@@ -43,9 +40,10 @@ deploy:
   before_script:
     - echo "deploying app"
   script:
+    - echo "$SSH_PRIVATE_KEY" 
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > key.pem
     - chmod 400 key.pem
-    - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker login -u mggoro -p nacho.goro.1 registry.gitlab.com/mggoro/pruebaspipeline"
     - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker pull registry.gitlab.com/mggoro/pruebaspipeline"
     - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker stop pruebaspipeline || true && docker rm pruebaspipeline || true"
     - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker run -p 3001:80 -d --name pruebaspipeline docker registry.gitlab.com/mggoro/pruebaspipeline"
