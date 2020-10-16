@@ -16,14 +16,12 @@ build:
     paths:
       - build
       - node_modules/
-
 test:
   stage: test
   image: node
   script:
     - echo "Testing App"
     - echo "Test successfully!"
-
 docker-build:
   stage: docker-build
   image: docker:latest
@@ -35,7 +33,6 @@ docker-build:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
     - echo "Registry image:" $CI_REGISTRY_IMAGE
-
 deploy:
   stage: deploy
   image: kroniak/ssh-client
