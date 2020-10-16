@@ -1,11 +1,10 @@
 stages:
+    - build
     - deploy
 build:
     services:
     - docker:dind  
-    before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    stage: deploy
+    stage: build
     cache:
       paths:
         - node_modules/
@@ -13,8 +12,16 @@ build:
       - 'echo "hello, llamando affff docker!"'
       - 'echo "Start building vvApp"'
       - npm install
-      - npm build
-      - docker push "$CI_REGISTRY_IMAGE"
-      - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-      - docker push "$CI_REGISTRY_IMAGE"
     image: node
+deploy:
+  services:
+  - docker:dind  
+  before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  stage: deploy
+  script:
+    - 'echo "hello, llamando affff docker!"'
+    - 'echo "Start building vvApp"'
+    - docker push "$CI_REGISTRY_IMAGE"
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
