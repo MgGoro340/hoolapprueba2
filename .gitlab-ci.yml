@@ -24,7 +24,6 @@ deploy:
   image: node
   stage: deploy
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - set -x
     # Set up SBT
     - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
@@ -33,6 +32,7 @@ deploy:
     - apt-get install sbt -yqq
     - sbt sbt-version
     - docker info
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - sbt docker:publish
