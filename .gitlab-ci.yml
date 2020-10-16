@@ -1,50 +1,49 @@
-image: gitlab/dind
-variables:
-  DOCKER_DRIVER: overlay
-
-services:
-  - docker:dind
-
 stages:
-    - build
-    - deploy
+  - build
+  - test
+  - docker-build
+  - deploy
+
 build:
-    services:
-    - docker:dind  
-    stage: build
-    cache:
-      paths:
-        - node_modules/
-    script:
-      - 'echo "hello, llamando affff docker!"'
-      - 'echo "Start building vvApp"'
-      - npm install
-    image: node
-deploy:
+  stage: build
   image: node
-  stage: deploy
+  script: 
+    - echo "Start building App"
+    - npm install
+    - npm build
+    - echo "Build successfully!"
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - build
+      - node_modules/
+
+test:
+  stage: test
+  image: node
+  script:
+    - echo "Testing App"
+    - echo "Test successfully!"
+
+docker-build:
+  stage: docker-build
+  image: docker:latest
+  services: 
+    - name: docker:19.03.8-dind
   before_script:
-    - set -x
-    # Set up Java 8
-    - echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
-    - apt-get update
-    - apt-get install -y curl
-    - apt-get install -y software-properties-common python-software-properties
-    - add-apt-repository -y ppa:webupd8team/java
-    - apt-get update
-    - apt-get install -y oracle-java8-installer
-    - rm -rf /var/lib/apt/lists/*
-    - rm -rf /var/cache/oracle-jdk8-installer
-    - apt-get update -yqq
-    - apt-get install apt-transport-https -yqq
-    # Set up SBT
-    - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-    - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-    - apt-get update -yqq
-    - apt-get install sbt -yqq
-    - sbt sbt-version
-    - docker info
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - sbt docker:publish
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+    - echo "Registry image:" $CI_REGISTRY_IMAGE
+
+deploy:
+  stage: deploy
+  image: kroniak/ssh-client
+  before_script:
+    - echo "deploying app"
+  script:
+    - chmod 400 $SSH_PRIVATE_KEY
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY root@$PROD_SERVER_IP "docker pull registry.gitlab.com/mggoro/pruebaspipeline"
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY root@$PROD_SERVER_IP "docker stop pruebaspipeline || true && docker rm pruebaspipeline || true"
+    - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY root@$PROD_SERVER_IP "docker run -p 3001:80 -d --name pruebaspipeline docker registry.gitlab.com/mggoro/pruebaspipeline"
