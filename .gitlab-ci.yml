@@ -1,6 +1,8 @@
 stages:
   - deploy
-
+  - test
+  - docker-build
+  - deploy
 build:
   stage: build
   image: node
@@ -33,7 +35,7 @@ docker-build:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
     - echo "Registry image:" $CI_REGISTRY_IMAGE
-    
+
 deploy:
   stage: deploy
   image: kroniak/ssh-client
