@@ -14,7 +14,7 @@ export const CounterApp = () => {
     return (
         <>
           {/* <h1> {counter} </h1> */}
-          <h1> counter1 {counter1} </h1>
+          <h1>Prueba de contador  {counter1} </h1>
           {/* <h1> counter2 {counter2} </h1> */}
           <hr/>
 
