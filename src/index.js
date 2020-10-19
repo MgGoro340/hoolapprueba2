@@ -11,7 +11,7 @@ import { HooksApp } from './HooksApp';
 
 
 ReactDOM.render(
-<RealExampleUseRef   />
+<CounterApp   />
 ,
   document.getElementById('root')
 );
