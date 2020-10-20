@@ -1,49 +1,28 @@
 stages:
-  - build
-  - test
   - docker-build
-  - deploy
-build:
-  stage: build
-  image: node
-  script: 
-    - echo "Start building App"
-    - npm install
-    - npm build
-    - echo "Build successfully!"
-  artifacts:
-    expire_in: 1 hour
-    paths:
-      - build
-      - node_modules/
-test:
-  stage: test
-  image: node
-  script:
-    - echo "Testing App"
-    - echo "Test successfully!"
 docker-build:
   stage: docker-build
   image: docker:latest
+  only:
+    - developmggoro  
   services: 
     - name: docker:19.03.8-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
-    - echo "Registry image:" $CI_REGISTRY_IMAGE
-deploy:
-  stage: deploy
-  image: kroniak/ssh-client
+    - docker build --pull -t pipelina:test .
+    - docker push pipelina:test
+    - echo "Registry image:" pipelina:test
+docker-build:
+  stage: docker-build
+  image: docker:latest
+  only:
+    - master  
+  services: 
+    - name: docker:19.03.8-dind
   before_script:
-    - echo "deploying app"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - echo "$SSH_PRIVATE_KEY" 
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > key.pem
-    - chmod 400 key.pem
-    - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker login -u mggoro -p nacho.goro.1 registry.gitlab.com/mggoro/pruebaspipeline"
-    - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker stop pruebaspipeline || true && docker rmi pruebaspipeline --force || true"
-    - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker pull registry.gitlab.com/mggoro/pruebaspipeline"
-    - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker rm pruebaspipeline --force || true"
-    - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@$PROD_SERVER_IP "docker run -d -p 3001:80 -d --name pruebaspipeline registry.gitlab.com/mggoro/pruebaspipeline"
+    - docker build --pull -t pipelina:latest .
+    - docker push pipelina:latest
+    - echo "Registry image:" pipelina:latest
