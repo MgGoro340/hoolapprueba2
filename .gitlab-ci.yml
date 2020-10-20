@@ -1,7 +1,8 @@
 stages:
-  - docker-build
-docker-build:
-  stage: docker-build
+  - docker-build-test
+  - docker-build-master
+docker-build-test:
+  stage: docker-build-test
   image: docker:latest
   only:
     - developmggoro  
@@ -13,8 +14,8 @@ docker-build:
     - docker build --pull -t pipelina:test .
     - docker push pipelina:test
     - echo "Registry image:" pipelina:test
-docker-build:
-  stage: docker-build
+docker-build-master:
+  stage: docker-build-master
   image: docker:latest
   only:
     - master  
