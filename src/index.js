@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { CounterApp } from './componentes/CounterApp';
+import { HooksApp } from './HooksApp';
 
 
 
 
 ReactDOM.render(
-<CounterApp   />
+<HooksApp   />
 ,
   document.getElementById('root')
 );
