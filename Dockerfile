@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copy the React App to the container
 COPY . /app/
-
+COPY /deploy/desa/apiUrl.ts  ./src/config/apiUrl.ts
 # Prepare the container for building React
 RUN yarn install
 # We want the production version
